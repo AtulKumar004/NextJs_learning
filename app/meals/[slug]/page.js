@@ -7,7 +7,7 @@ export default  async function MealDetails({params}) {
 
   console.log("=====================" , meal)
 
-  // meal.instructions = meal.instructions.replace(/\n/g, '<br />')
+  meal.instructions = meal.instructions.replace(/\n/g, '<br />')
 
   return (
    <>
