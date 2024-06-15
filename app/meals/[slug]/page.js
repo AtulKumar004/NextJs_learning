@@ -2,10 +2,14 @@ import React from 'react'
 import styles from "./page.module.css"
 import Image from 'next/image'
 import { getMeal } from '@/lib/meals'
+import { notFound } from 'next/navigation';
 export default  async function MealDetails({params}) {
   const meal = await getMeal(params.slug);
 
-  console.log("=====================" , meal)
+if(!meal){
+  notFound();
+  // return ;
+}
 
   meal.instructions = meal.instructions.replace(/\n/g, '<br />')
 
