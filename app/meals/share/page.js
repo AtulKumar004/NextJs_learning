@@ -1,24 +1,39 @@
-import ImagePicker from '@/components/meals/image-picker';
-import classes from './page.module.css';
-import { saveMeal } from '@/lib/meals';
-import { redirect } from 'next/navigation';
+import ImagePicker from "@/components/meals/image-picker";
+import classes from "./page.module.css";
+import { saveMeal } from "@/lib/meals";
+import { redirect } from "next/navigation";
+import MealsFormSubmitBtn from "@/components/meals/meals-form-submit";
+
+const isFormValied = (text) => {
+  return !text || !text.trim() !== " ";
+};
 
 export default function ShareMealPage() {
-    async function shareMeal(formData){
-        'use server';
-        const meal = {
-            title : formData.get('title'),
-            creator_email : formData.get('email'),
-            creator : formData.get('name'),
-            summary : formData.get('summary'),
-            image : formData.get('image'),
-            instructions : formData.get('instructions'),
-        }
+  async function shareMeal(formData) {
+    "use server";
 
-        await saveMeal(meal);
-        redirect('/meals');
-
+    if (
+      isFormValied(formData.get("title")) ||
+      isFormValied(formData.get("email")) ||
+      isFormValied(formData.get("name")) ||
+      isFormValied(formData.get("summary")) ||
+      isFormValied(formData.get("instructions")) ||
+      !formData.get("image") || formData.get("image").size === 0 
+    ) {
+      throw new  Error('Invalied form data') ;
     }
+    const meal = {
+      title: formData.get("title"),
+      creator_email: formData.get("email"),
+      creator: formData.get("name"),
+      summary: formData.get("summary"),
+      image: formData.get("image"),
+      instructions: formData.get("instructions"),
+    };
+
+    await saveMeal(meal);
+    redirect("/meals");
+  }
   return (
     <>
       <header className={classes.header}>
@@ -56,9 +71,10 @@ export default function ShareMealPage() {
               required
             ></textarea>
           </p>
-          <ImagePicker  name= "image" label = "Image"/>
+          <ImagePicker name="image" label="Image" />
           <p className={classes.actions}>
-            <button type="submit">Share Meal</button>
+            {/* <button type="submit">Share Meal</button> */}
+            <MealsFormSubmitBtn />
           </p>
         </form>
       </main>
